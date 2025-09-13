@@ -1,0 +1,7 @@
+{
+  "name": "paraprose",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}

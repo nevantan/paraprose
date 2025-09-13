@@ -1,0 +1,58 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Nunito', sans-serif;
+  --font-serif: 'IBM Plex Serif', serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --default-font-family: var(--font-sans);
+
+  --color-anti: #fcfcfc;
+  --color-silver: #cccccc;
+  --color-steel: #757575;
+  --color-royal: #9252FF;
+  --color-black: #171717;
+
+  --shadow-panel: 0 0 0 1px rgba(84, 72, 49, 0.00), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 14px 28px -6px rgba(0, 0, 0, 0.06);
+}
+
+@layer base {
+  body {
+    @apply bg-anti;
+  }
+
+  h1 {
+    @apply text-black text-2xl text-center font-sans;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white rounded-lg shadow-panel border border-silver;
+  }
+
+  button.ghost {
+    @apply bg-transparent text-royal hover:bg-silver/20 px-2 py-1 rounded cursor-pointer;
+  }
+
+  .ui-header {
+    @apply text-lg font-sans font-normal;
+  }
+
+  .ui-normal {
+    @apply text-base font-sans font-normal;
+  }
+
+  .ui-small {
+    @apply text-sm font-sans font-normal;
+  }
+
+  .content-text {
+    @apply text-base font-serif font-normal leading-7
+  }
+
+  .hotkey {
+    @apply font-mono border-b border-r border-silver rounded-sm px-1 py-0.5 text-xs;
+    background-color: #eeeeee;
+    color: #6b6b6b;
+  }
+}
