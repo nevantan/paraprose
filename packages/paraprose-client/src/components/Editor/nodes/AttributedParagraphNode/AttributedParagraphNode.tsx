@@ -2,7 +2,10 @@
 import {
   $applyNodeReplacement,
   ParagraphNode,
+  type DOMExportOutput,
   type EditorConfig,
+  type LexicalEditor,
+  type NodeKey,
 } from 'lexical'
 import { v4 as uuid } from 'uuid'
 
@@ -12,12 +15,18 @@ export class AttributedParagraphNode extends ParagraphNode {
   private _uuid = uuid()
   private _source: ParagraphSource = 'user'
 
+  constructor(_uuid = uuid(), source: ParagraphSource = 'user', key?: NodeKey) {
+    super(key)
+    this._uuid = _uuid
+    this._source = source
+  }
+
   static getType(): string {
     return 'attributed-paragraph'
   }
 
   static clone(node: AttributedParagraphNode): AttributedParagraphNode {
-    return new AttributedParagraphNode(node.__key)
+    return new AttributedParagraphNode(node.uuid, node.source, node.__key)
   }
 
   createDOM(): HTMLElement {
@@ -43,6 +52,9 @@ export class AttributedParagraphNode extends ParagraphNode {
   }
 }
 
-export function $createAttributedParagraph(): AttributedParagraphNode {
-  return $applyNodeReplacement(new AttributedParagraphNode())
+export function $createAttributedParagraph(
+  uuid?: string,
+  source?: ParagraphSource
+): AttributedParagraphNode {
+  return $applyNodeReplacement(new AttributedParagraphNode(uuid, source))
 }

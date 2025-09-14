@@ -9,7 +9,7 @@ interface HotkeyHintProps {
 
 export const HotkeyHint: React.FC<HotkeyHintProps> = ({ chord, children }) => {
   return (
-    <div className="flex items-center gap-2 text-sm text-steel">
+    <div className="flex items-center gap-2 text-sm text-steel font-sans font-light">
       <HotkeyChord keys={chord} />
       <div>{children}</div>
     </div>

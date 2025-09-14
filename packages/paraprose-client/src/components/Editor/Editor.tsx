@@ -2,7 +2,10 @@
 import React from 'react'
 
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin'
-import { LexicalComposer } from '@lexical/react/LexicalComposer'
+import {
+  LexicalComposer,
+  type InitialConfigType,
+} from '@lexical/react/LexicalComposer'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { ContentEditable } from '@lexical/react/LexicalContentEditable'
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
@@ -14,6 +17,7 @@ import {
   $createAttributedParagraph,
 } from './nodes/AttributedParagraphNode'
 import { ParagraphNode } from 'lexical'
+import { LoadPlugin } from './plugins/LoadPlugin'
 
 const theme = {}
 
@@ -21,11 +25,16 @@ const onError = (error: Error) => {
   console.error('Lexical error:', error)
 }
 
-export const Editor: React.FC = () => {
-  const initialConfig = {
-    namespace: 'MyEditor',
+interface EditorProps {
+  chapterId: string
+}
+
+export const Editor: React.FC<EditorProps> = ({ chapterId }) => {
+  const initialConfig: InitialConfigType = {
+    namespace: 'ParaProse',
     theme,
     onError,
+    editorState: null,
     nodes: [
       AttributedParagraphNode,
       {
@@ -44,7 +53,7 @@ export const Editor: React.FC = () => {
         <RichTextPlugin
           contentEditable={
             <ContentEditable
-              className="flex-1 outline-0"
+              className="flex flex-col gap-4 flex-1 outline-0"
               aria-placeholder={'Enter some text...'}
               placeholder={
                 <div className="absolute top-0 left-0 pointer-events-none text-steel">
@@ -58,7 +67,8 @@ export const Editor: React.FC = () => {
         <HistoryPlugin />
         <AutoFocusPlugin />
         <GeneratorPlugin />
-        <SavePlugin />
+        <SavePlugin chapterId={chapterId} />
+        <LoadPlugin chapterId={chapterId} />
       </LexicalComposer>
     </div>
   )

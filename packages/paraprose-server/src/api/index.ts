@@ -1,17 +1,19 @@
 // Libraries
 import { Hono } from 'hono'
-import { protect } from '../lib/auth'
-import { db } from '../db'
 
 // Routes
 import storyRouter from './stories'
+import chapterRouter from './chapters'
+import paragraphRouter from './paragraphs'
+import completionRoute from './completions'
 
 // Types
 import { Context } from '..'
-import chapterRouter from './chapters'
 
 const apiRouter = new Hono<{ Variables: Context }>()
   .route('/stories', storyRouter)
   .route('/chapters', chapterRouter)
+  .route('/paragraphs', paragraphRouter)
+  .route('/completions', completionRoute)
 
 export default apiRouter
