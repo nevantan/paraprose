@@ -39,7 +39,7 @@ export const Editor: React.FC<EditorProps> = ({ chapterId }) => {
       AttributedParagraphNode,
       {
         replace: ParagraphNode,
-        with: (_node: ParagraphNode) => {
+        with: () => {
           return $createAttributedParagraph()
         },
         withKlass: AttributedParagraphNode,

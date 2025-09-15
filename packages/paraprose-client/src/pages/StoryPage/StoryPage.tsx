@@ -17,9 +17,7 @@ import { chaptersCollection } from '@/collections/chapters'
 
 const route = getRouteApi('/story/$storyId')
 
-interface StoryPageProps {}
-
-export const StoryPage: React.FC<StoryPageProps> = () => {
+export const StoryPage: React.FC = () => {
   const { storyId: id } = route.useParams()
 
   const {

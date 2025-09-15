@@ -43,7 +43,7 @@ export const TagEditor: React.FC<TagEditorProps> = ({
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let newValue = e.target.value
+    const newValue = e.target.value
 
     // Check if user typed a comma - if so, create a tag
     if (newValue.includes(',')) {

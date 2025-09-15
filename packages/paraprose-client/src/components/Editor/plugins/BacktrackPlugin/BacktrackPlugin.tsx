@@ -1,13 +1,7 @@
 // Libraries
 import React, { useEffect } from 'react'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
-import {
-  COMMAND_PRIORITY_HIGH,
-  KEY_ARROW_RIGHT_COMMAND,
-  KEY_TAB_COMMAND,
-} from 'lexical'
-
-interface BacktrackPlugin {}
+import { COMMAND_PRIORITY_HIGH, KEY_TAB_COMMAND } from 'lexical'
 
 export const BacktrackPlugin: React.FC = () => {
   const [editor] = useLexicalComposerContext()

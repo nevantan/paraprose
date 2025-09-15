@@ -3,9 +3,7 @@ import { useRouter } from '@tanstack/react-router'
 import { useMutation } from '@tanstack/react-query'
 import { authClient, useSession } from '@/lib/auth'
 
-interface AuthPageProps {}
-
-export const AuthPage: React.FC<AuthPageProps> = () => {
+export const AuthPage: React.FC = () => {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
