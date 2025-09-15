@@ -6,7 +6,7 @@ import { chaptersTable, paragraphsTable, storiesTable } from '../db/schema/core'
 
 // Types
 import type { Context } from '../'
-import { and, eq } from 'drizzle-orm'
+import { and, asc, eq } from 'drizzle-orm'
 import { zValidator } from '@hono/zod-validator'
 import z from 'zod'
 
@@ -24,6 +24,28 @@ const chapterRouter = new Hono<{ Variables: Context }>()
       .where(eq(storiesTable.userId, session.user.id))
 
     return c.json(chapters.map(({ chapter }) => chapter))
+  })
+  .get('/:chapterId/paragraphs', async (c) => {
+    const db = c.get('db')
+    const session = c.get('session')
+    const { chapterId } = c.req.param()
+
+    const paragraphs = await db
+      .select({
+        paragraph: paragraphsTable,
+      })
+      .from(paragraphsTable)
+      .leftJoin(chaptersTable, eq(paragraphsTable.chapterId, chaptersTable.id))
+      .leftJoin(storiesTable, eq(chaptersTable.storyId, storiesTable.id))
+      .where(
+        and(
+          eq(paragraphsTable.chapterId, chapterId),
+          eq(storiesTable.userId, session.user.id)
+        )
+      )
+      .orderBy(asc(paragraphsTable.position))
+
+    return c.json(paragraphs.map(({ paragraph }) => paragraph))
   })
   .post(
     '/:chapterId/paragraphs',

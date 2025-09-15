@@ -1,6 +1,11 @@
 import { queryCollectionOptions } from '@tanstack/query-db-collection'
 import { createCollection } from '@tanstack/react-db'
 import { client, queryClient } from '@/lib/api'
+import type { LexicalEditor } from 'lexical'
+import {
+  $markParagraphAsPersisted,
+  AttributedParagraphNode,
+} from '@/components/Editor/nodes/AttributedParagraphNode'
 
 // Need to update to partial-fetch:
 // https://tanstack.com/db/latest/docs/collections/query-collection#handling-partialincremental-fetches
@@ -23,8 +28,9 @@ export const paragraphsCollection = createCollection(
     getKey: (item) => item.id,
     queryClient,
     onInsert: async ({ transaction }) => {
-      const inserts = transaction.mutations.map((m) => m.changes)
-      for (const insert of inserts) {
+      for (const mutation of transaction.mutations) {
+        const insert = mutation.changes
+
         if (
           !insert.chapterId ||
           !insert.content ||
@@ -36,6 +42,15 @@ export const paragraphsCollection = createCollection(
         await client.chapters[':chapterId'].paragraphs.$post({
           param: { chapterId: insert.chapterId },
           json: { content: insert.content, position: insert.position },
+        })
+
+        const metadata = mutation.metadata as {
+          editor: LexicalEditor
+          node: AttributedParagraphNode
+        }
+
+        metadata.editor.update(() => {
+          $markParagraphAsPersisted(metadata.node)
         })
       }
     },

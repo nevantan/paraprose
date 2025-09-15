@@ -3,8 +3,8 @@ import React, { useEffect, useRef } from 'react'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { $createTextNode, $getRoot } from 'lexical'
 import { $createAttributedParagraph } from '../../nodes/AttributedParagraphNode'
-import { paragraphsCollection } from '@/collections/paragraphs'
-import { eq, useLiveQuery } from '@tanstack/react-db'
+import { useQuery } from '@tanstack/react-query'
+import { client } from '@/lib/api'
 
 interface LoadPluginProps {
   chapterId: string
@@ -14,30 +14,44 @@ export const LoadPlugin: React.FC<LoadPluginProps> = ({ chapterId }) => {
   const [editor] = useLexicalComposerContext()
   const loaded = useRef(false)
 
-  const { data: paragraphs, isLoading } = useLiveQuery((q) =>
-    q
-      .from({ paragraph: paragraphsCollection })
-      .where(({ paragraph }) => eq(paragraph.chapterId, chapterId))
-      .orderBy(({ paragraph }) => paragraph.position, 'asc')
-  )
+  const {
+    data: paragraphs,
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: ['paragraphs', chapterId],
+    queryFn: async () => {
+      const res = await client.chapters[':chapterId'].paragraphs.$get({
+        param: { chapterId },
+      })
+
+      if (!res.ok) throw new Error(res.statusText)
+
+      try {
+        const data = await res.json()
+        return data
+      } catch (e) {
+        throw new Error('Failed to parse response')
+      }
+    },
+  })
 
   useEffect(() => {
-    if (loaded.current || isLoading) return
+    if (loaded.current || isPending || isError) return
     loaded.current = true
 
-    console.log('Loading paragraphs for chapter', chapterId, paragraphs)
     return editor.update(() => {
       const root = $getRoot()
 
       for (const paragraph of paragraphs) {
         const paragraphNode = $createAttributedParagraph(
           paragraph.id,
-          paragraph.source
+          paragraph.source,
+          true
         )
 
         const textNode = $createTextNode(paragraph.content)
         paragraphNode.append(textNode)
-        console.log('appended text node', textNode, 'to', paragraphNode)
 
         root.append(paragraphNode)
       }

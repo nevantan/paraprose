@@ -14,11 +14,18 @@ type ParagraphSource = 'user' | 'llm'
 export class AttributedParagraphNode extends ParagraphNode {
   private _uuid = uuid()
   private _source: ParagraphSource = 'user'
+  private _persisted: boolean = false
 
-  constructor(_uuid = uuid(), source: ParagraphSource = 'user', key?: NodeKey) {
+  constructor(
+    _uuid = uuid(),
+    source: ParagraphSource = 'user',
+    persisted: boolean = false,
+    key?: NodeKey
+  ) {
     super(key)
     this._uuid = _uuid
     this._source = source
+    this._persisted = persisted
   }
 
   static getType(): string {
@@ -26,7 +33,12 @@ export class AttributedParagraphNode extends ParagraphNode {
   }
 
   static clone(node: AttributedParagraphNode): AttributedParagraphNode {
-    return new AttributedParagraphNode(node.uuid, node.source, node.__key)
+    return new AttributedParagraphNode(
+      node.uuid,
+      node.source,
+      node.persisted,
+      node.__key
+    )
   }
 
   createDOM(): HTMLElement {
@@ -43,6 +55,18 @@ export class AttributedParagraphNode extends ParagraphNode {
     return false
   }
 
+  public setPersisted(persisted: boolean) {
+    const self = this.getWritable()
+    self._persisted = persisted
+    return self
+  }
+
+  public setUUID(uuid: string) {
+    const self = this.getWritable()
+    self._uuid = uuid
+    return self
+  }
+
   get uuid() {
     return this._uuid
   }
@@ -50,11 +74,31 @@ export class AttributedParagraphNode extends ParagraphNode {
   get source() {
     return this._source
   }
+
+  get persisted() {
+    return this._persisted
+  }
 }
 
 export function $createAttributedParagraph(
   uuid?: string,
-  source?: ParagraphSource
+  source?: ParagraphSource,
+  persisted?: boolean
 ): AttributedParagraphNode {
-  return $applyNodeReplacement(new AttributedParagraphNode(uuid, source))
+  return $applyNodeReplacement(
+    new AttributedParagraphNode(uuid, source, persisted)
+  )
+}
+
+export function $markParagraphAsPersisted(
+  node: AttributedParagraphNode
+): AttributedParagraphNode {
+  return node.setPersisted(true)
+}
+
+export function $setUUIDFromServer(
+  node: AttributedParagraphNode,
+  uuid: string
+) {
+  return node.setUUID(uuid)
 }
