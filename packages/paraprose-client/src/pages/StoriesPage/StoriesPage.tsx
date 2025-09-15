@@ -1,6 +1,5 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useRouter } from '@tanstack/react-router'
 import { v4 as uuid } from 'uuid'
 
 // Icons
@@ -11,11 +10,7 @@ import { StoriesLayout } from '@/layouts/StoriesLayout'
 import { useLiveQuery } from '@tanstack/react-db'
 import { storiesCollection } from '@/collections/stories'
 
-interface StoriesPageProps {}
-
-export const StoriesPage: React.FC<StoriesPageProps> = () => {
-  const router = useRouter()
-
+export const StoriesPage: React.FC = () => {
   const {
     data: stories,
     isLoading: isLoadingStories,

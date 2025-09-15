@@ -3,9 +3,7 @@ import React, { useEffect } from 'react'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { COMMAND_PRIORITY_CRITICAL, KEY_ENTER_COMMAND } from 'lexical'
 
-interface GeneratorPluginProps {}
-
-export const GeneratorPlugin: React.FC<GeneratorPluginProps> = () => {
+export const GeneratorPlugin: React.FC = () => {
   const [editor] = useLexicalComposerContext()
 
   useEffect(() => {

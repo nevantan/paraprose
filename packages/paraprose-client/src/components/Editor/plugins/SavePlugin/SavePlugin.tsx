@@ -1,5 +1,5 @@
 // Libraries
-import React, { useLayoutEffect, useRef } from 'react'
+import React, { useCallback, useLayoutEffect, useRef } from 'react'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { $getRoot } from 'lexical'
 import {
@@ -36,7 +36,7 @@ export const SavePlugin: React.FC<SavePluginProps> = ({ chapterId }) => {
       try {
         const data = await res.json()
         return data
-      } catch (e) {
+      } catch {
         throw new Error('Failed to parse response')
       }
     },
@@ -55,25 +55,28 @@ export const SavePlugin: React.FC<SavePluginProps> = ({ chapterId }) => {
       try {
         const data = await res.json()
         return data
-      } catch (e) {
+      } catch {
         throw new Error('Failed to parse response')
       }
     },
   })
-  const updateParagraph = (paragraph: { id: string; content: string }) => {
-    if (debounceTimeouts.current.has(paragraph.id)) {
-      clearTimeout(debounceTimeouts.current.get(paragraph.id))
-    }
+  const updateParagraph = useCallback(
+    (paragraph: { id: string; content: string }) => {
+      if (debounceTimeouts.current.has(paragraph.id)) {
+        clearTimeout(debounceTimeouts.current.get(paragraph.id))
+      }
 
-    const timeout = setTimeout(() => {
-      _updateParagraph(paragraph).catch((e) => {
-        console.error('Failed to update paragraph', e)
-      })
-      debounceTimeouts.current.delete(paragraph.id)
-    }, 500)
+      const timeout = setTimeout(() => {
+        _updateParagraph(paragraph).catch((e) => {
+          console.error('Failed to update paragraph', e)
+        })
+        debounceTimeouts.current.delete(paragraph.id)
+      }, 500)
 
-    debounceTimeouts.current.set(paragraph.id, timeout)
-  }
+      debounceTimeouts.current.set(paragraph.id, timeout)
+    },
+    [_updateParagraph]
+  )
 
   useLayoutEffect(() => {
     return editor.registerUpdateListener(
@@ -122,7 +125,7 @@ export const SavePlugin: React.FC<SavePluginProps> = ({ chapterId }) => {
         })
       }
     )
-  }, [editor, insertParagraph, updateParagraph])
+  }, [editor, insertParagraph, updateParagraph, chapterId])
 
   return null
 }

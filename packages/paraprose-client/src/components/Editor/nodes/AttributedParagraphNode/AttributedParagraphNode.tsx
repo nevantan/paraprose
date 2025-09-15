@@ -1,12 +1,5 @@
 // Libraries
-import {
-  $applyNodeReplacement,
-  ParagraphNode,
-  type DOMExportOutput,
-  type EditorConfig,
-  type LexicalEditor,
-  type NodeKey,
-} from 'lexical'
+import { $applyNodeReplacement, ParagraphNode, type NodeKey } from 'lexical'
 import { v4 as uuid } from 'uuid'
 
 type ParagraphSource = 'user' | 'llm'
@@ -47,11 +40,7 @@ export class AttributedParagraphNode extends ParagraphNode {
     return dom
   }
 
-  updateDom(
-    _prevNode: this,
-    _dom: HTMLElement,
-    _config: EditorConfig
-  ): boolean {
+  updateDom(): boolean {
     return false
   }
 

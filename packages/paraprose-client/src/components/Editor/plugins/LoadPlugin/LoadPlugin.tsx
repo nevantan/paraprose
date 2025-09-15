@@ -30,7 +30,7 @@ export const LoadPlugin: React.FC<LoadPluginProps> = ({ chapterId }) => {
       try {
         const data = await res.json()
         return data
-      } catch (e) {
+      } catch {
         throw new Error('Failed to parse response')
       }
     },
@@ -56,7 +56,7 @@ export const LoadPlugin: React.FC<LoadPluginProps> = ({ chapterId }) => {
         root.append(paragraphNode)
       }
     })
-  }, [editor, paragraphs])
+  }, [editor, paragraphs, isPending, isError])
 
   return null
 }

@@ -21,7 +21,7 @@ export const paragraphsCollection = createCollection(
         const data = await res.json()
 
         return data
-      } catch (e) {
+      } catch {
         throw new Error('Failed to parse response')
       }
     },
