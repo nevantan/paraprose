@@ -13,7 +13,13 @@ export const GeneratorPlugin: React.FC<GeneratorPluginProps> = () => {
       KEY_ENTER_COMMAND,
       (e) => {
         if (e?.ctrlKey) {
-          console.log('Do generate')
+          fetch(
+            `http://localhost:3000/api/completions/b19f985c-c2e1-43de-b87b-7421de889288`,
+            {
+              credentials: 'include',
+              method: 'POST',
+            }
+          )
         } else {
           console.log('Just a regular enter')
         }
